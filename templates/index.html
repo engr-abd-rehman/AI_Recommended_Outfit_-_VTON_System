@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Outfit Recommendation &amp; Virtual Try-On System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><i class="fas fa-tshirt"></i></div>
+      <span class="brand-name">FashionAI</span>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <!-- <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i><span>Home</span></a></li> -->
+        <li class="nav-item active"><a href="#" class="nav-link"><i class="fas fa-tshirt"></i><span>Upload Outfit</span></a></li>
+        <!-- <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-magic"></i><span>Recommendations</span></a></li> -->
+        <!-- <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-user-circle"></i><span>Virtual Try-On</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-heart"></i><span>Saved Outfits</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-history"></i><span>History</span></a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-cog"></i><span>Settings</span></a></li> -->
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <p class="powered-label">Powered by</p>
+      <div class="tech-stack">
+        <div class="tech-item python"><i class="fab fa-python"></i> Python</div>
+        <div class="tech-item pytorch"><i class="fas fa-fire"></i> PyTorch</div>
+        <div class="tech-item flask"><i class="fas fa-flask"></i> Flask</div>
+        <div class="tech-item opencv"><i class="fas fa-eye"></i> OpenCV</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN AREA ========== -->
+  <div class="main-area">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="header-icon"><i class="fas fa-robot"></i></div>
+        <span class="header-title">AI Outfit Recommendation &amp; Virtual Try-On System</span>
+      </div>
+      <div class="header-right">
+        <div class="user-info">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <span class="user-name">Local Demo</span>
+        </div>
+        <div class="notification-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notif-badge">3</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+      <!-- ========== LEFT CONTENT ========== -->
+      <div class="left-content">
+
+        <div class="section-header">
+          <h3>Get AI-Powered Outfit Suggestions</h3>
+          <p>Upload your clothing image and see matching outfits with virtual try-on</p>
+        </div>
+
+        <!-- UPLOAD CARD -->
+        <div class="upload-card">
+          <label class="upload-label">Upload Your Clothing Image</label>
+          <div class="upload-box" id="uploadBox" onclick="triggerFileInput()">
+            <div id="uploadPrompt" class="upload-prompt">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <p class="upload-text">Drag &amp; Drop here</p>
+              <p class="upload-sub">or <span class="browse-text">Browse</span></p>
+              <input type="file" id="fileInput" accept="image/*" class="d-none" onchange="handleFileUpload(event)"/>
+            </div>
+            <div id="uploadPreview" class="upload-preview d-none">
+              <img id="previewImg" src="" alt="Uploaded Clothing"/>
+              <button class="btn-upload-another" onclick="resetUpload(event)">
+                <i class="fas fa-redo"></i> Upload Another
+              </button>
+            </div>
+          </div>
+          <button class="btn-get-recommendations" id="getRecoBtn" onclick="getRecommendations()">
+            Get Recommendations <i class="fas fa-arrow-right ms-2"></i>
+          </button>
+        </div>
+
+        <!-- CV DETECTED PROPERTIES (shown after upload) -->
+        <div class="section-block d-none" id="detectedPanel">
+          <h5 class="block-title">
+            <i class="fas fa-eye me-2" style="color:#7c3aed;"></i>CV-Detected Shirt Properties
+          </h5>
+          <div class="detected-grid">
+            <div class="detected-item">
+              <span class="detected-label">Category</span>
+              <span class="detected-value" id="detectedCategory">—</span>
+            </div>
+            <div class="detected-item">
+              <span class="detected-label">Tone</span>
+              <span class="detected-value" id="detectedTone">—</span>
+            </div>
+            <div class="detected-item">
+              <span class="detected-label">Dominant Color</span>
+              <span class="detected-value" id="detectedColor">—</span>
+              <span id="colorSwatch" class="color-swatch" style="display:none;"></span>
+            </div>
+            <div class="detected-item">
+              <span class="detected-label">Pattern</span>
+              <span class="detected-value" id="detectedPattern">—</span>
+            </div>
+            <div class="detected-item">
+              <span class="detected-label">Style Hint</span>
+              <span class="detected-value" id="detectedStyle">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECOMMENDED OUTFITS -->
+        <div class="section-block" id="recommendationsSection">
+          <h5 class="block-title">
+            Recommended Outfits
+            <span class="reco-badge d-none" id="recoBadge">3 matches found</span>
+          </h5>
+          <div class="outfit-cards-row">
+
+            <!-- Card 0 -->
+            <div class="outfit-card selected" id="outfitCard0" onclick="selectOutfit(this, 0)">
+              <div class="card-header-row">
+                <div class="match-score" id="matchPct0">—</div>
+                <span class="outfit-tag casual-tag" id="outfitTag0">Look 1</span>
+              </div>
+              <div class="outfit-pair">
+                <div class="outfit-slot">
+                  <span class="slot-chip" id="topChip0">Uploaded</span>
+                  <img id="topImg0" class="slot-img" src="" alt="Your Item"/>
+                  <div class="slot-placeholder" id="topPlaceholder0"><i class="fas fa-tshirt"></i></div>
+                </div>
+                <div class="pair-divider"><span></span><i class="fas fa-chevron-down"></i><span></span></div>
+                <div class="outfit-slot">
+                  <span class="slot-chip rec-chip" id="bottomChip0">Recommended</span>
+                  <img id="bottomImg0" class="slot-img" src="" alt="Recommended"/>
+                  <div class="slot-placeholder" id="bottomPlaceholder0"><i class="fas fa-tshirt"></i></div>
+                  <div class="slot-name" id="pantsName0"></div>
+                </div>
+              </div>
+              <button class="btn-select">Select Look</button>
+            </div>
+
+            <!-- Card 1 -->
+            <div class="outfit-card" id="outfitCard1" onclick="selectOutfit(this, 1)">
+              <div class="card-header-row">
+                <div class="match-score" id="matchPct1">—</div>
+                <span class="outfit-tag smart-tag" id="outfitTag1">Look 2</span>
+              </div>
+              <div class="outfit-pair">
+                <div class="outfit-slot">
+                  <span class="slot-chip" id="topChip1">Uploaded</span>
+                  <img id="topImg1" class="slot-img" src="" alt="Your Item"/>
+                  <div class="slot-placeholder" id="topPlaceholder1"><i class="fas fa-tshirt"></i></div>
+                </div>
+                <div class="pair-divider"><span></span><i class="fas fa-chevron-down"></i><span></span></div>
+                <div class="outfit-slot">
+                  <span class="slot-chip rec-chip" id="bottomChip1">Recommended</span>
+                  <img id="bottomImg1" class="slot-img" src="" alt="Recommended"/>
+                  <div class="slot-placeholder" id="bottomPlaceholder1"><i class="fas fa-tshirt"></i></div>
+                  <div class="slot-name" id="pantsName1"></div>
+                </div>
+              </div>
+              <button class="btn-select">Select Look</button>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="outfit-card" id="outfitCard2" onclick="selectOutfit(this, 2)">
+              <div class="card-header-row">
+                <div class="match-score" id="matchPct2">—</div>
+                <span class="outfit-tag formal-tag" id="outfitTag2">Look 3</span>
+              </div>
+              <div class="outfit-pair">
+                <div class="outfit-slot">
+                  <span class="slot-chip" id="topChip2">Uploaded</span>
+                  <img id="topImg2" class="slot-img" src="" alt="Your Item"/>
+                  <div class="slot-placeholder" id="topPlaceholder2"><i class="fas fa-tshirt"></i></div>
+                </div>
+                <div class="pair-divider"><span></span><i class="fas fa-chevron-down"></i><span></span></div>
+                <div class="outfit-slot">
+                  <span class="slot-chip rec-chip" id="bottomChip2">Recommended</span>
+                  <img id="bottomImg2" class="slot-img" src="" alt="Recommended"/>
+                  <div class="slot-placeholder" id="bottomPlaceholder2"><i class="fas fa-tshirt"></i></div>
+                  <div class="slot-name" id="pantsName2"></div>
+                </div>
+              </div>
+              <button class="btn-select">Select Look</button>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="outfit-card" id="outfitCard3" onclick="selectOutfit(this, 3)">
+              <div class="card-header-row">
+                <div class="match-score" id="matchPct3">—</div>
+                <span class="outfit-tag street-tag" id="outfitTag3">Look 4</span>
+              </div>
+              <div class="outfit-pair">
+                <div class="outfit-slot">
+                  <span class="slot-chip" id="topChip3">Uploaded</span>
+                  <img id="topImg3" class="slot-img" src="" alt="Your Item"/>
+                  <div class="slot-placeholder" id="topPlaceholder3"><i class="fas fa-tshirt"></i></div>
+                </div>
+                <div class="pair-divider"><span></span><i class="fas fa-chevron-down"></i><span></span></div>
+                <div class="outfit-slot">
+                  <span class="slot-chip rec-chip" id="bottomChip3">Recommended</span>
+                  <img id="bottomImg3" class="slot-img" src="" alt="Recommended"/>
+                  <div class="slot-placeholder" id="bottomPlaceholder3"><i class="fas fa-tshirt"></i></div>
+                  <div class="slot-name" id="pantsName3"></div>
+                </div>
+              </div>
+              <button class="btn-select">Select Look</button>
+            </div>
+
+          </div>
+        </div>
+
+
+      </div><!-- END LEFT CONTENT -->
+
+      <!-- ========== RIGHT PANEL – VIRTUAL TRY-ON ========== -->
+      <div class="right-panel">
+
+        <div class="tryon-header">
+          <h5><i class="fas fa-user me-2"></i>Virtual Try-On</h5>
+        </div>
+
+        <!-- Model image area -->
+        <div class="tryon-body">
+          <div class="model-container">
+
+            <!-- Model photo -->
+            <img id="tryonImg"
+                 src="/api/model-image"
+                 alt="Full-body male model"
+                 class="model-full-img"
+                 onerror="this.style.display='none';
+                          document.getElementById('modelFallback').style.display='flex';"/>
+
+            <!-- Fallback if image fails to load -->
+            <div id="modelFallback" class="model-placeholder-box" style="display:none;">
+              <i class="fas fa-user-circle"></i>
+              <p>Model photo unavailable</p>
+            </div>
+
+            <!-- AI badge — anchored to bottom of the image area -->
+            <div class="tryon-ai-badge">
+              <i class="fas fa-magic me-1"></i> AI Virtual Try-On
+            </div>
+
+            <!-- Loading overlay — shown while OOTDiffusion inference runs -->
+            <div id="tryonLoadingOverlay" class="tryon-loading-overlay d-none">
+              <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+              <p class="mb-1 fw-bold" id="progressLabel">Generating outfit…</p>
+              <div style="width:85%;background:#ffffff33;border-radius:6px;height:10px;overflow:hidden;margin:6px auto;">
+                <div id="tryonProgressBar"
+                     style="height:10px;width:0%;background:linear-gradient(90deg,#e91e8c,#9c27b0);
+                            border-radius:6px;transition:width 0.5s ease;"></div>
+              </div>
+              <small id="progressPct" style="font-weight:600;">0%</small>
+              <br><small id="progressMsg" style="opacity:0.85;">Starting…</small>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Try On Outfit button (activated via Select Look on cards) -->
+        <button class="btn-tryon" id="tryOnBtn" onclick="tryOnShirt()" disabled>
+          <i class="fas fa-magic me-1"></i> Try On Outfit
+        </button>
+
+        <!-- View Toggle -->
+        <!-- <div class="view-toggle">
+          <button class="view-btn active-view" onclick="setView(this)">Front View</button>
+          <button class="view-btn" onclick="setView(this)">Side View</button>
+          <button class="view-btn" onclick="setView(this)">Back View</button>
+        </div> -->
+
+        <!-- Action Buttons -->
+        <div class="tryon-actions">
+          <button class="btn-download-img" onclick="downloadTryonImage()">
+            <i class="fas fa-download me-1"></i> Download
+          </button>
+          <button class="btn-share-img">
+            <i class="fas fa-share me-1"></i> Share
+          </button>
+        </div>
+
+      </div><!-- END RIGHT PANEL -->
+
+    </div><!-- END CONTENT WRAPPER -->
+  </div><!-- END MAIN AREA -->
+</div><!-- END APP CONTAINER -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+diff --git a/preprocess/openpose/run_openpose.py b/preprocess/openpose/run_openpose.py
+index b9b0e92..e8cd66d 100644
+--- a/preprocess/openpose/run_openpose.py
++++ b/preprocess/openpose/run_openpose.py
+@@ -1,6 +1,3 @@
+-import pdb
+-
+-import config
+ from pathlib import Path
+ import sys
+ 
+@@ -15,14 +12,12 @@ import random
+ import time
+ import json
+ 
+-# from pytorch_lightning import seed_everything
+ from preprocess.openpose.annotator.util import resize_image, HWC3
+ from preprocess.openpose.annotator.openpose import OpenposeDetector
+ 
+ import argparse
+ from PIL import Image
+ import torch
+-import pdb
+ 
+ # os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3'
+ 

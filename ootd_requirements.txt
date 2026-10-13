@@ -1,0 +1,50 @@
+# =============================================================================
+# ootd_requirements.txt  –  OOTDiffusion subprocess environment (ootd_env)
+# Python 3.10.x  |  NVIDIA GPU + CUDA 11.8 required
+# =============================================================================
+# Install PyTorch with CUDA FIRST, then this file:
+#
+#   pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchaudio==2.0.2+cu118 ^
+#       --extra-index-url https://download.pytorch.org/whl/cu118
+#   pip install -r ootd_requirements.txt
+#
+# This implementation requires CUDA; CPU-only PyTorch is not a try-on fallback.
+# =============================================================================
+
+# ── PyTorch + CUDA 11.8 ───────────────────────────────────────────────────────
+# Installed via separate command above — listed here for reference only
+torch==2.0.1+cu118
+torchvision==0.15.2+cu118
+torchaudio==2.0.2+cu118
+
+# ── OOTDiffusion Core Pipeline ────────────────────────────────────────────────
+diffusers==0.24.0
+transformers==4.36.2
+accelerate==0.26.1
+omegaconf==2.3.0
+
+# ── Image Processing ──────────────────────────────────────────────────────────
+numpy==1.26.4
+Pillow==9.4.0
+opencv-python==4.9.0.80
+scipy==1.10.1
+scikit-image==0.21.0
+
+# ── Model-Specific Dependencies ───────────────────────────────────────────────
+einops==0.7.0
+onnxruntime==1.16.2
+basicsr==1.4.2
+mediapipe==0.10.33
+config==0.5.1
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+tqdm==4.64.1
+matplotlib==3.10.8
+huggingface-hub==0.21.3
+safetensors==0.7.0
+tokenizers==0.15.2
+filelock==3.25.2
+packaging==26.0
+PyYAML==6.0.3
+regex==2026.4.4
+typing_extensions==4.15.0

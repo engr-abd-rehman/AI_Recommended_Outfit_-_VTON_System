@@ -1,0 +1,2 @@
+gdown==6.4.2
+huggingface-hub==0.21.3

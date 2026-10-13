@@ -1,0 +1,30 @@
+name: Source Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.10'
+      - name: Install lightweight test dependencies
+        run: python -m pip install -r requirements-test.txt
+      - name: Check syntax
+        run: python -m compileall -q app.py recommender.py build_index.py garment_cleaner.py scripts
+      - name: Test restoration safety
+        run: python scripts/test_restore_assets.py
+      - name: Test single-job admission
+        run: python scripts/test_job_guard.py
+      - name: Audit publication files
+        run: python scripts/audit_publication.py --check-only
