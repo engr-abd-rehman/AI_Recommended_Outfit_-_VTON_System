@@ -10,8 +10,9 @@ Future releases still require the appropriate owner's authorization.
 [publication-files.json](../publication-files.json) is the explicit allowlist.
 It includes first-party application source, dependency declarations, setup and
 architecture/testing/security notes, the upstream-derived patch and its license,
-offline tests/CI, empty local-asset placeholders, and two publication-safe UI
-screenshots. Files not on the list are not copied to the release payload.
+offline tests/CI, empty local-asset placeholders, and a publication-safe desktop
+screenshot. The complete setup procedure lives in the README. Files not on the
+list are not copied to the release payload.
 
 The full downloaded upstream tree is not pushed as a nested Git repository.
 Setup fetches its pinned revision and applies the recorded patch. Nothing is

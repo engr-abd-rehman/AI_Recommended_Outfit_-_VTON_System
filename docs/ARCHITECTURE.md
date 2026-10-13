@@ -45,7 +45,7 @@ CLIP here is a locally loaded model, not an external API request.
 | `test_upload_preview.py` | Regression test for asynchronous FileReader/image loading after changing uploads |
 | `test_restore_assets.py` | Offline archive safety, fresh-clone extraction, hashing, missing-data rejection, and resumable-transfer tests |
 | `test_job_guard.py` | Isolated route-admission tests with mock workers; does not imply GPU inference was tested |
-| `capture_readme_screenshots.py` | Starts an isolated source-only preview and captures publication-safe desktop/mobile UI without photos or catalog data |
+| `capture_readme_screenshots.py` | Starts an isolated source-only preview and captures the publication-safe desktop UI without photos or catalog data |
 | `audit_publication.py` | Checks the allowlist, Git exclusions, file sizes, links, and suspicious content; emits hashes and optionally stages an exact release copy |
 
 ## Downloaded and Generated Files

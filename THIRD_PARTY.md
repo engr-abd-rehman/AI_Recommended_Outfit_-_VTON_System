@@ -23,7 +23,7 @@ OOTDiffusion models are downloaded directly from
 [levihsu/OOTDiffusion](https://huggingface.co/levihsu/OOTDiffusion). The separate
 CLIP image encoder comes from
 [openai/clip-vit-large-patch14](https://huggingface.co/openai/clip-vit-large-patch14).
-Their pinned revisions and destinations are documented in [setup](SETUP_GUIDE.md).
+Their pinned revisions and destinations are documented in [README installation](README.md#5-download-the-data-and-weights).
 No model weight, parsing ONNX, pose PTH, or duplicate checkpoint copy is published.
 Review the relevant model cards and any underlying model/dataset terms before use.
 

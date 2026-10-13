@@ -48,17 +48,15 @@ def main():
             with sync_playwright() as playwright:
                 browser = playwright.chromium.launch(channel="chrome", headless=True)
                 page = browser.new_page(viewport={"width": 1600, "height": 1050})
-                for label, width, height in (("desktop", 1600, 1050), ("mobile", 390, 844)):
-                    page.set_viewport_size({"width": width, "height": height})
-                    page.goto(url, wait_until="networkidle")
-                    page.locator("#modelFallback").wait_for(state="visible")
-                    assert page.locator(".user-name").inner_text() == "Local Demo"
-                    assert not page.locator("#tryonLoadingOverlay").is_visible()
-                    assert page.locator("#tryonImg").evaluate("img => img.naturalWidth === 0")
-                    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
-                    image_path = images / f"interface-{label}.png"
-                    page.screenshot(path=str(image_path), full_page=True)
-                    print(f"PASS: privacy-safe {label} capture: {image_path.relative_to(ROOT)}", flush=True)
+                page.goto(url, wait_until="networkidle")
+                page.locator("#modelFallback").wait_for(state="visible")
+                assert page.locator(".user-name").inner_text() == "Local Demo"
+                assert not page.locator("#tryonLoadingOverlay").is_visible()
+                assert page.locator("#tryonImg").evaluate("img => img.naturalWidth === 0")
+                assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+                image_path = images / "interface-desktop.png"
+                page.screenshot(path=str(image_path), full_page=True)
+                print(f"PASS: privacy-safe desktop capture: {image_path.relative_to(ROOT)}", flush=True)
                 browser.close()
         finally:
             if process.poll() is None and os.name == "nt":

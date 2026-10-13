@@ -5,7 +5,6 @@
     ".gitattributes",
     ".github/workflows/checks.yml",
     "README.md",
-    "SETUP_GUIDE.md",
     "THIRD_PARTY.md",
     "LICENSE",
     "LICENSE_POLICY.md",
@@ -42,7 +41,6 @@
     "docs/ARCHITECTURE.md",
     "docs/TESTING.md",
     "docs/PUBLISHING.md",
-    "docs/images/interface-desktop.png",
-    "docs/images/interface-mobile.png"
+    "docs/images/interface-desktop.png"
   ]
 }

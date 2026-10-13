@@ -75,7 +75,7 @@ restricted catalog previews, and machine paths. Never blindly add them to Git.
 .\venv\Scripts\python.exe scripts/capture_readme_screenshots.py
 ```
 
-This launches an isolated clean preview, captures desktop/phone layouts into
+This launches an isolated clean preview, captures the desktop layout into
 `docs/images/`, then stops only its own server. These screenshots show the real
 interface without a supplied photo or downloaded catalog. They are not fabricated
 generation results. Adding real result screenshots requires a separate rights
